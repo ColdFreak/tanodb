@@ -2,7 +2,8 @@
 -include_lib("riak_core/include/riak_core_vnode.hrl").
 
 -export([
-         ping/0
+         ping/0,
+         add/2
         ]).
 
 -ignore_xref([
@@ -17,3 +18,9 @@ ping() ->
     PrefList = riak_core_apl:get_primary_apl(DocIdx, 1, tanodb),
     [{IndexNode, _Type}] = PrefList,
     riak_core_vnode_master:sync_spawn_command(IndexNode, ping, tanodb_vnode_master).
+
+add(A, B) ->
+    DocIdx = riak_core_util:chash_key({<<"add">>, term_to_binary({A, B})}),
+    PrefList = riak_core_apl:get_primary_apl(DocIdx, 1, tanodb),
+    [{IndexNode, _Type}] = PrefList,
+    riak_core_vnode_master:sync_spawn_command(IndexNode, {add, A, B}, tanodb_vnode_master).

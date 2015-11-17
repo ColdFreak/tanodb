@@ -32,9 +32,12 @@ init([Partition]) ->
 %% Sample command: respond to a ping
 handle_command(ping, _Sender, State) ->
     {reply, {pong, State#state.partition}, State};
+handle_command({add, A, B}, _Sender, State) ->
+    {reply, {A+B, State#state.partition}, State};
 handle_command(Message, _Sender, State) ->
     lager:warning("unhandled_command ~p", [Message]),
     {noreply, State}.
+
 
 handle_handoff_command(_Message, _Sender, State) ->
     {noreply, State}.
