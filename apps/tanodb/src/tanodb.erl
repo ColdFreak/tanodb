@@ -14,11 +14,13 @@
 
 %% @doc Pings a random vnode to make sure communication is functional
 ping() ->
+    %% chase_key({Bucket, _Key}=BKey)
     DocIdx = riak_core_util:chash_key({<<"ping">>, term_to_binary(os:timestamp())}),
     PrefList = riak_core_apl:get_primary_apl(DocIdx, 1, tanodb),
     [{IndexNode, _Type}] = PrefList,
     riak_core_vnode_master:sync_spawn_command(IndexNode, ping, tanodb_vnode_master).
 
+%% @doc tanodb_vnode.erlファイルのhandle_command関数がこの操作を処理する
 add(A, B) ->
     DocIdx = riak_core_util:chash_key({<<"add">>, term_to_binary({A, B})}),
     PrefList = riak_core_apl:get_primary_apl(DocIdx, 1, tanodb),
